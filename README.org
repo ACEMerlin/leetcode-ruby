@@ -1,0 +1,113 @@
+* leetcode-ruby
+
+** What are those
+
+These are my leetcode solutions along with some other stuff:
+
+  - Each *id.problem_title.rb* is a leetcode solution in ruby.
+  - *other* contains problems which are not on leetcode.
+  - *data-structures* contains the general data structures I use to
+    solve problems. They are used throughout my solutions.
+
+** What you get:
+
+  - Solutions have problem description with it so that you don't need
+    to visit leetcode. You can also use this repo with [[https://github.com/skygragon/leetcode-cli][leetcode-cli]].
+    If you are using Emacs, you can use my plugin [[https://github.com/ACEMerlin/lain-emacs/blob/master/lisp/lain-leetcode.el][lain-leetcode.el]].
+  - Well documented code, see [[https://github.com/ACEMerlin/leetcode-ruby/blob/master/4.median-of-two-sorted-arrays.rb][4.median-of-two-sorted-arrays.rb]] for an
+    example.
+  - Some problems are difficult to understand if I just shove the
+    optimal solution in your face, therefore I write my thought
+    process and code evolving process, see
+    [[https://github.com/ACEMerlin/leetcode-ruby/blob/master/10.regular-expression-matching.rb][10.regular-expression-matching.rb]] for an example.
+  - Well written code, maybe? Coming from FP and OOP background, I
+    tend to write concise function and class with clean API.
+
+* Ruby
+
+Ruby, as Matz said, really is a programming language that makes my
+happy (with leetcode problems of course, being a dynamically typed
+language after all). But Ruby is not the language to solve intense
+problems on codeforces or spoj, you'll get TLE most of the time.
+However I like to prototype using Ruby for its easy-to-write nature,
+then rewrite in C/C++.
+
+Ruby arrays are dynamic, it's kind of like C++'s =std::vector= or
+Java's =ArrayList=. Its =shift= (delete at beginning), =unshift=
+(insert at beginning), =push= (insert at end) and =pop= (delete at
+end) are amortized O(1) ops. With those amortized O(1) ops it can
+simulate stack and queue:
+
+** Stack
+
+#+begin_src ruby
+stack = []
+stack << 2    # push 2 => stack = [2]
+stack << 3    # push 3 => stack = [2, 3]
+stack.pop     # pop  3 => stack = [2]
+#+end_src
+
+** Queue
+
+#+begin_src ruby
+queue = []
+queue << 2    # push 2 => queue = [2]
+queue << 3    # push 3 => queue = [2, 3]
+queue.shift   # pop  2 => queue = [3]
+#+end_src
+
+** Map
+
+Maps in ruby are hashes:
+
+#+begin_src ruby
+map = {}           # empty map
+map = Hash.new(0)  # or a map with a default value of 0
+map[:a] = 1        # map = {a:1}
+map[:b] = 2        # map = {a:1,b:2}
+#+end_src
+
+** Set
+
+#+begin_src ruby
+set = Set.new      # empty set
+set << 1           # set = #{1}
+set << 2           # set = #{1,2}
+set << 1           # set = #{1,2}
+#+end_src
+
+** Other Data Structures
+
+Other data structures such as Priority Queue, Heap, BST, Ruby doesn't
+have them build-in, so I implement them when I need to, see
+=data-structures= directory:
+
+- =uniou-find.rb= Union Find (weighed quick-union with path compression).
+- =heap.rb= Min Heap, Max Heap and Priority Queue.
+- =fenwick-tree.rb= 1d Fenwick Tree with range sum query.
+- =segment-tree.rb= 1d Segment Tree with various query examples.
+- =sparse-table.rb= 1d Sparse Table with range minimum/maximum query.
+- =treap.rb= Treap (rotation based and merge/split based).
+
+* Other Useful Stuff
+
+** Algorithm
+
+- [[https://cp-algorithms.com/][E-Maxx Algorithms]]
+- [[https://www.topcoder.com/community/competitive-programming/tutorials/binary-search/][Binary Search]]
+- [[https://www.topcoder.com/community/competitive-programming/tutorials/dynamic-programming-from-novice-to-advanced/][Dynamic Programming]]
+- [[http://120.52.51.15/www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf][LLRB]]
+
+** System design
+
+- Consistent Hashing
+  - [[https://www.toptal.com/big-data/consistent-hashing][A Guide to Consistent Hashing]]
+  - [[https://medium.com/vimeo-engineering-blog/improving-load-balancing-with-a-new-consistent-hashing-algorithm-9f1bd75709ed][Improving load balancing with a new consistent-hashing algorithm]]
+  - [[https://arxiv.org/pdf/1608.01350.pdf][Consistent Hashing with Bounded Loads]]
+
+
+** Other
+
+- TODO Knight Tour
+- Fair Work Load (Binary Search)
+- TODO HashMap With Expiration Time

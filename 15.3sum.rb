@@ -45,6 +45,19 @@
 # [-1,-1,2] we have to deal with first -1 first otherwize we'll miss
 # -1+-1+2==0. If we've found a solution, skip j if nums[j] ==
 # nums[j+1], skip k if nums[k] == nums[k-1].
+#
+# Let’s call the value that j was at to being with j0 and the value
+# that j is at now j1. Similarly, let’s call k’s initial value k0 and
+# k’s final value kn.
+#
+# Let’s call the value being searched for T. We know that, for each of
+# the values ki(0<i<n) (the values that k skipped over) j0+ki>0
+# (otherwise the algorithm wouldn’t have skipped over those k). We
+# also know that j1>j0. Combining these inequalities we have j1+ki>0
+# (i.e. definitely not = to 0).
+#
+# Using this same logic the other direction, we can see that j won’t
+# skip possible values as well.
 
 # @param {Integer[]} nums
 # @return {Integer[][]}

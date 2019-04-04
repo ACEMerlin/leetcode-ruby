@@ -94,9 +94,13 @@ have them build-in, so I implement them when I need to, see
 ** Algorithm
 
 - [[https://cp-algorithms.com/][E-Maxx Algorithms]]
+- [[http://algorithms.wtf][Algorithms WTF]]
+- [[https://www.youtube.com/channel/UCBLr7ISa_YDy5qeATupf26w][Algorithms Live!]]
+- [[https://www.youtube.com/playlist?list=PLnfg8b9vdpLn9exZweTJx44CII1bYczuk][CS106B]]
+- [[https://codeforces.com/blog/entry/57282][Codeforces Blogs]]
+- [[https://clist.by/][Contest List]]
 - [[https://www.topcoder.com/community/competitive-programming/tutorials/binary-search/][Binary Search]]
 - [[https://www.topcoder.com/community/competitive-programming/tutorials/dynamic-programming-from-novice-to-advanced/][Dynamic Programming]]
-- [[http://120.52.51.15/www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf][LLRB]]
 
 ** System design
 

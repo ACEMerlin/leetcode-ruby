@@ -47,11 +47,10 @@ end
 
 class MinHeap
 
-  def initialize(array=[])
+  def initialize(arr=[])
     @arr = [nil]
-    array.each do |item|
-      push(item)
-    end
+    @arr.concat(arr)
+    (arr.size/2).downto(1).each { |i| sink(i) }
   end
 
   def push(item)

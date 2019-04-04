@@ -58,7 +58,8 @@ class MinHeap
 
   def initialize(arr=[])
     @arr = [nil]
-    arr.each { |v| self << v }
+    @arr.concat(arr)
+    (arr.size/2).downto(1).each { |i| sink(i) }
   end
 
   def <<(v)

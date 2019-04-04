@@ -12,10 +12,11 @@ class PQueue
     @arr = [nil]
     return if array.empty?
     if array[0].is_a? Array
-      array.each { |k, v| push(k, v) }
+      @arr.concat(array.map { |k, v| Node.new(k, v) })
     else
-      array.each { |v| push(v) }
+      @arr.concat(array.map { |k| Node.new(k) })
     end
+    (array.size/2).downto(1).each { |i| sink(i) }
   end
 
   def push(k, v=k)
@@ -48,7 +49,7 @@ class PQueue
 
   class PQueue::Node
     attr_accessor :key, :val
-    def initialize(key, val)
+    def initialize(key, val=key)
       @key, @val = key, val
     end
   end

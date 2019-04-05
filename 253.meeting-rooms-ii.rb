@@ -17,6 +17,7 @@
 #     end
 # end
 
+
 # If you put all intervals on a 1d line, then the rooms we need at any
 # given point x would be the same as the number of intersections if we
 # draw a vertical line at point x. Using this idea, we can do simple
@@ -28,15 +29,14 @@
 def min_meeting_rooms(intervals)
   s, e = [], []
   intervals.each do |i|
-    s << i[0]
-    e << i[1]
+    s << i.start
+    e << i.end
   end
   s.sort!
   e.sort!
   i = j = 0
   x = ans = 0
-  n = intervals.size
-  while i < n
+  while i < intervals.size
     if s[i] < e[j]
       x += 1
       ans = [ans, x].max
@@ -49,16 +49,17 @@ def min_meeting_rooms(intervals)
   ans
 end
 
+
 require './data-structures/treap'
 
 def min_meeting_rooms_bst(intervals)
   st = Treap.new
   intervals.each do |i|
-    st.insert(i[0], :start)
-    st.insert(i[1], :end)
+    st[i.start] = :start
+    st[i.end] = :end
   end
   ans = 0
-  st.reduce(0) do |c, i|
+  st.each_val.reduce(0) do |c, i|
     if i == :start
       c += 1
       ans = [ans, c].max

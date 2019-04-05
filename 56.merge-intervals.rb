@@ -75,8 +75,15 @@ def merge(intervals)
 end
 
 
-# Inteval tree TODO
-
-
-
+# As you can see the key idea is to sort the intervals by 'start'.
+# When the interviewer ask you what if we can't do sorting, the answer
+# would be using BSTs, they are designed for keeping a list of sorted
+# item dynamically.
+#
+# However Ruby doesn't have any build-in sorted collections. Java has
+# TreeSet/TreeMap; C++ has map/set. So I'm not going to implement it
+# here, see data-structures/treap.rb for a demo BST implementaton.
+#
+# C++ version if you're still interested: https://ideone.com/B7tkGs
+#
 # Another variation of the problem, see other/merget-two-intervals.rb

@@ -16,256 +16,288 @@
 # This one is based on rotation.
 
 class Treap
-  include Enumerable
+  class EmptyNode
 
-  def initialize
-    @root = nil
-    @MAX = 1<<63
-    @random = Random.new
-  end
+    def method_missing(m, *args, &block); end
 
-  def randp
-    @random.rand(@MAX)
-  end
-
-  def insert(key, val=key)
-    @root = insert_(key, val, @root)
-  end
-  alias_method :<<, :insert
-
-  def delete(key)
-    @root = delete_(key, @root)
-  end
-
-  def find(key, val=true, node=@root)
-    return if node.nil?
-    cmp = key <=> node.key
-    if cmp < 0
-      find(key, val, node.left)
-    elsif cmp > 0
-      find(key, val, node.right)
-    else
-      val ? node.val : node
+    def empty?
+      true
     end
-  end
-  alias_method :[], :find
 
-  def kth(k, node=@root)
-    return if node.nil?
-    x = size(node.left)
-    if k < x+1
-      kth(k, node.left)
-    elsif k > x+node.count
-      kth(k-x-node.count, node.right)
-    else
-      node.val
+    def size
+      0
+    end
+
+    def d(tab=0)
+      puts "#{' '*tab}E"
+    end
+
+    def insert(key, value)
+      Node.new(key, value)
+    end
+
+    def delete(_)
+      self
+    end
+
+    def rank(_)
+      0
+    end
+
+    def split(_)
+      [EMPTY, EMPTY]
     end
   end
 
-  def merge_to(treap, node=@root)
-    return treap.merge_to(self) if treap.size < size
-    merge_to_(treap)
-  end
+  EMPTY = EmptyNode.new.freeze
+end
 
-  def size(node=@root)
-    node&.size.to_i
-  end
-
-  def empty?
-    @root.nil?
-  end
-
-  def debug(n=@root, tab=0)
-    return '' if n.nil?
-    puts "#{' '*tab} #{n.key} #{n.val}, #{n.prior}, #{n.size}"
-    tab += 2
-    debug(n.left, tab)
-    debug(n.right, tab)
-  end
-
-  def min(node=@root)
-    return node&.val if node&.left.nil?
-    min(node.left)
-  end
-
-  def max(node=@root)
-    return node&.val if node&.right.nil?
-    max(node.right)
-  end
-
-  def delete_min
-    return if empty?
-    @root = delete_min_(@root)
-  end
-
-  def delete_max
-    return if empty?
-    @root = delete_max_(@root)
-  end
-
-  def floor(key, node=@root)
-    return if node.nil?
-    cmp = key <=> node.key
-    if cmp < 0
-      floor(key, node.left)
-    elsif cmp > 0
-      floor(key, node.right) || node.val
-    else
-      node.val
-    end
-  end
-
-  def ceil(key, node=@root)
-    return if node.nil?
-    cmp = key <=> node.key
-    if cmp < 0
-      ceil(key, node.left) || node.val
-    elsif cmp > 0
-      ceil(key, node.right)
-    else
-      node.val
-    end
-  end
-
-  def rank(key, node=@root)
-    return 0 if node.nil?
-    cmp = key <=> node.key
-    if cmp < 0
-      rank(key, node.left)
-    elsif cmp > 0
-      node.count + size(node.left) + rank(key, node.right)
-    else
-      size(node.left)
-    end
-  end
-
-  def count(lo, hi)
-    hi_node = find(hi, false)
-    if !hi_node.nil?
-      rank(hi) - rank(lo) + hi_node.count
-    else
-      rank(hi) - rank(lo)
-    end
-  end
-
-  def search(lo, hi, node=@root, ans=[])
-    return [] if node.nil?
-    if node.key < lo
-      search(lo, hi, node.right, ans)
-    elsif node.key > hi
-      search(lo, hi, node.left, ans)
-    else
-      search(lo, hi, node.left, ans)
-      node.count.times { ans << node.val }
-      search(lo, hi, node.right, ans)
-    end
-    ans
-  end
-
-  def each(&block)
-    return to_enum(:each) unless block_given?
-    inorder(@root, &block)
-  end
-
-  private
+class Treap
+  MAX = (2<<63).freeze
 
   class Node
-    attr_accessor :key, :val, :prior, :left, :right, :size, :count
+    include Comparable
 
-    def initialize(key, val, prior)
-      @key, @val, @prior, @size, @count = key, val, prior, 1, 1
-      @left, @right = nil, nil
+    attr_accessor :key, :val, :prior, :left, :right, :size
+
+    def initialize(key, val)
+      @key, @val, = key, val
+      @prior, @size = Random.rand(MAX), 1, 1
+      @left = @right = EMPTY
     end
 
     def update
-      @size = @count + @left&.size.to_i + @right&.size.to_i
+      @size = 1 + @left.size + @right.size
     end
-  end
 
-  def rotate_right(h)
-    x = h.left
-    h.left = x.right
-    x.right = h
-    h.update
-    x
-  end
-
-  def rotate_left(h)
-    x = h.right
-    h.right = x.left
-    x.left = h
-    h.update
-    x
-  end
-
-  def insert_(key, val, node)
-    return Node.new(key, val, randp) if node.nil?
-    if key < node.key
-      node.left = insert_(key, val, node.left)
-      node = rotate_right(node) if node.left.prior > node.prior
-    elsif key > node.key
-      node.right = insert_(key, val, node.right)
-      node = rotate_left(node) if node.right.prior > node.prior
-    else
-      node.count += 1
+    def <=>(o)
+      @key <=> o.key
     end
-    node.update
-    node
-  end
 
-  def delete_(key, node)
-    return if node.nil?
-    cmp = key <=> node.key
-    if cmp < 0
-      node.left = delete_(key, node.left)
-    elsif cmp > 0
-      node.right = delete_(key, node.right)
-    else
-      if node.count > 1
-        node.count -= 1
+    def empty?
+      false
+    end
+
+    def rotate_right
+      x = @left
+      @left = x.right
+      x.right = self
+      update
+      x
+    end
+
+    def rotate_left
+      x = @right
+      @right = x.left
+      x.left = self
+      update
+      x
+    end
+
+    def insert(key, val)
+      n = self
+      case key <=> @key
+      when -1
+        @left = @left.insert(key, val)
+        n = rotate_right if @left.prior > @prior
+      when 1
+        @right = @right.insert(key, val)
+        n = rotate_left if @right.prior > @prior
       else
-        return node.left if node.right.nil?
-        return node.right if node.left.nil?
-        if node.left.prior > node.right.prior
-          node = rotate_right(node)
-          node.right = delete_(key, node.right)
+        @val = val
+      end
+      n.update
+      n
+    end
+
+    def delete(key)
+      n = self
+      cmp = key <=> @key
+      case cmp
+      when -1
+        @left = @left.delete(key)
+      when 1
+        @right = @right.delete(key)
+      else
+        return @left if @right.empty?
+        return @right if @left.empty?
+        if @left.prior > @right.prior
+          n = rotate_right
+          n.right = n.right.delete(key)
         else
-          node = rotate_left(node)
-          node.left = delete_(key, node.left)
+          n = rotate_left
+          n.left = n.left.delete(key)
         end
       end
+      n.update
+      n
     end
-    node.update
-    node
+
+    def find(key)
+      cmp = key <=> @key
+      case cmp
+      when  -1
+        @left.find(key)
+      when 1
+        @right.find(key)
+      when 0
+        @val
+      end
+    end
+
+    def rank(key)
+      cmp = key <=> @key
+      case cmp
+      when -1
+        @left.rank(key)
+      when 1
+        1 + @left.size + @right.rank(key)
+      else
+        @left.size
+      end
+    end
+
+    def kth(k)
+      x = @left.size+1
+      cmp = k <=> x
+      case cmp
+      when -1
+        @left.kth(k)
+      when 1
+        @right.kth(k-x)
+      else
+        @val
+      end
+    end
+
+    def floor(key)
+      cmp = key <=> @key
+      case cmp
+      when -1
+        @left.floor(key)
+      when 1
+        @right.floor(key) || @val
+      else
+        @val
+      end
+    end
+
+    def ceil(key)
+      cmp = key <=> @key
+      case cmp
+      when -1
+        @left.ceil(key) || @val
+      when 1
+        @right.ceil(key)
+      else
+        @val
+      end
+    end
+
+    def count_between(lo, hi)
+      if !find(hi).nil?
+        rank(hi) - rank(lo) + 1
+      else
+        rank(hi) - rank(lo)
+      end
+    end
+
+    def between(lo, hi, ans=[])
+      if @key < lo
+        @right.between(lo, hi, ans)
+      elsif @key > hi
+        @left.between(lo, hi, ans)
+      else
+        @left.between(lo, hi, ans)
+        ans << @val
+        @right.between(lo, hi , ans)
+      end
+      ans
+    end
+
+    def split(key)
+      if key <= @key
+        l, r = @left.split(key)
+        @left = r
+        update
+        [l, self]
+      else
+        l, r = @right.split(key)
+        @right = l
+        update
+        [self, r]
+      end
+    end
+
+    def merge(o)
+      return self if o.nil?
+      return o if self.empty?
+      if @prior < o.prior
+        o.left = merge(self, o.left)
+        o.update
+        o
+      else
+        @right = merge(@right, o)
+        update
+        self
+      end
+    end
+
+    def each(&block)
+      return to_enum if !block_given?
+      @left.each(&block)
+      yield [@key, @val]
+      @right.each(&block)
+    end
+
+    def each_key(&block)
+      return to_enum(:each_key) if !block_given?
+      @left.each_key(&block)
+      yield @key
+      @right.each_key(&block)
+    end
+
+    def each_val(&block)
+      return to_enum(:each_val) if !block_given?
+      @left.each_val(&block)
+      yield @val
+      @right.each_val(&block)
+    end
+
+    def d(tab=0)
+      puts "#{' '*tab}#{@key} #{@val}, #{@prior}, #{@size}"
+      tab += 2
+      @left.d(tab)
+      @right.d(tab)
+    end
+  end
+end
+
+class Treap
+  include Enumerable
+
+  def initialize
+    @root = EMPTY
   end
 
-  def merge_to_(treap, node=@root)
-    return if node.nil?
-    merge_to_(treap, node.left)
-    treap.insert(node.key, node.val)
-    merge_to_(treap, node.right)
-    treap
+  def method_missing(m, *args, &block)
+    if @root.respond_to?(m)
+      @root.send(m, *args, &block)
+    else
+      raise ArgumentError.new("Method `#{m}` doesn't exist.")
+    end
   end
 
-  def delete_min_(node)
-    return node.right if node.left.nil?
-    node.left = delete_min_(node.left)
-    node&.update
-    node
+  def []=(key, val)
+    @root = @root.insert(key, val)
   end
 
-  def delete_max_(node)
-    return node.left if node.right.nil?
-    node.right = delete_max_(node.right)
-    node&.update
-    node
+  def [](key)
+    @root.find(key)
   end
 
-  def inorder(node, &block)
-    return if node.nil?
-    inorder(node.left, &block)
-    node.count.times { block.call(node.val) }
-    inorder(node.right, &block)
+  def delete(key)
+    @root = @root.delete(key)
   end
 end
 
@@ -276,21 +308,21 @@ require 'test/unit'
 class SimpleTest < Test::Unit::TestCase
   def test_treap
     t = Treap.new
-    xs = [3, 6, 12, 14, 9, 11, 4, 3, 7, 13]
-    xs.each { |x| t << x }
+    xs = [3, 6, 12, 14, 9, 11, 4, 5, 7, 13]
+    xs.each { |x| t[x] = x  }
     xs.sort.each_with_index { |x, i| assert_equal t.kth(i+1), x }
-    assert t.find(8).nil?
-    assert_equal t.count(3, 8), 5
-    assert_equal t.count(7, 15), 6
-    assert_equal t.count(11, 11), 1
-    assert_equal t.search(3, 5), [3, 3, 4]
-    assert_equal t.search(9, 12), [9, 11, 12]
+    assert t[8].nil?
+    assert_equal t.count_between(3, 8), 5
+    assert_equal t.count_between(7, 15), 6
+    assert_equal t.count_between(11, 11), 1
+    assert_equal t.between(3, 5), [3, 4, 5]
+    assert_equal t.between(9, 12), [9, 11, 12]
     assert_equal t.rank(3), 0
     assert_equal t.rank(2), 0
     assert_equal t.rank(8), 5
-    assert_equal t.rank(4), 2
+    assert_equal t.rank(4), 1
     assert_equal t.rank(15), 10
-    assert_equal t.to_a, xs.sort
+    assert_equal t.each_val.to_a, xs.sort
   end
 end
 
@@ -319,41 +351,8 @@ class Treap2
     @root = delete_(key, @root)
   end
 
-  def find(key, node=@root)
-    return if node.nil?
-    cmp = key <=> node.key
-    if cmp < 0
-      find(key, node.left)
-    elsif cmp > 0
-      find(key, node.right)
-    else
-      node.val
-    end
-  end
-  alias_method :[], :find
-
-  def kth(k, node=@root)
-    return if node.nil?
-    x = size(node.left)+1
-    if k < x
-      kth(k, node.left)
-    elsif k > x
-      kth(k-x, node.right)
-    else
-      node.val
-    end
-  end
-
   def size(node=@root)
     node&.size.to_i
-  end
-
-  def debug(n=@root, tab=0)
-    return '' if n.nil?
-    puts "#{' '*tab} #{n.key} #{n.val}, #{n.prior}, #{n.size}"
-    tab += 2
-    debug(n.left, tab)
-    debug(n.right, tab)
   end
 
   private

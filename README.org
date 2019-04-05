@@ -14,12 +14,12 @@ These are my leetcode solutions along with some other stuff:
   - Solutions have problem description with it so that you don't need
     to visit leetcode. You can also use this repo with [[https://github.com/skygragon/leetcode-cli][leetcode-cli]].
     If you are using Emacs, you can use my plugin [[https://github.com/ACEMerlin/lain-emacs/blob/master/lisp/lain-leetcode.el][lain-leetcode.el]].
-  - Well documented code, see [[https://github.com/ACEMerlin/leetcode-ruby/blob/master/4.median-of-two-sorted-arrays.rb][4.median-of-two-sorted-arrays.rb]] for an
+  - Well documented code, see [[file:4.median-of-two-sorted-arrays.rb][4.median-of-two-sorted-arrays.rb]] for an
     example.
   - Some problems are difficult to understand if I just shove the
     optimal solution in your face, therefore I write my thought
     process and code evolving process, see
-    [[https://github.com/ACEMerlin/leetcode-ruby/blob/master/10.regular-expression-matching.rb][10.regular-expression-matching.rb]] for an example.
+    [[file:10.regular-expression-matching.rb][10.regular-expression-matching.rb]] for an example.
   - Well written code, maybe? Coming from FP and OOP background, I
     tend to write concise function and class with clean API.
 

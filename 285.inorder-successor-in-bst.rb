@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-# @lc app=leetcode id=162 lang=ruby
+# @lc app=leetcode id=285 lang=ruby
 #
-# [162] Find Peak Element
+# [285] Inorder Successor in BST
 #
 # https://leetcode.com/problems/inorder-successor-in-bst/description/
 #

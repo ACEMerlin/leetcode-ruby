@@ -67,10 +67,10 @@ end
 
 def build_graph(words)
   g = Hash.new { |h, k| h[k] = Set.new }
-  (0..words.size-2).each do |i|
+  words.each_cons(2) do |w1, w2|
     p = q = 0
-    while p < words[i].size && q < words[i+1].size
-      a, b = words[i][p], words[i+1][q]
+    while p < w1.size && q < w2.size
+      a, b = w1[p], w2[q]
       if a != b
         g[a] << b
         break

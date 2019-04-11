@@ -39,19 +39,15 @@ class LRUCache
 
   def initialize(capacity)
     @h = {}
-    @size = 0
     @cap = capacity
-    @head = Node.new(nil, nil)
-    @tail = Node.new(nil, nil)
-    @head.prev = @tail
-    @tail.next = @head
+    @ddl = DDL.new
   end
 
   def get(key)
-    return -1 if !@h.has_key?(key)
-    node = @h[key]
-    delete(node)
-    insert_tail(node)
+    return -1 if !@h.has_key?(key) # don't have the key
+    node = @h[key]                 # get the node
+    @ddl.delete(node)              # delete the node
+    @ddl.unshift(node)             # unshift the node
     node.val
   end
 
@@ -59,48 +55,61 @@ class LRUCache
     if @h.has_key?(key)
       node = @h[key]
       node.val = value
-      delete(node)
+      @ddl.delete(node) and @ddl.unshift(node) if @ddl.first != node
     else
-      if @size == @cap
-        @h.delete(@head.prev.key)
-        delete(@head.prev)
+      if @h.size == @cap
+        @h.delete(@ddl.last.key)
+        @ddl.pop
       end
       node = Node.new(key, value)
       @h[key] = node
+      @ddl.unshift(node)
     end
-    insert_tail(node)
-  end
-
-  def debug
-    cur, str = @tail, ""
-    while !cur.nil?
-      str << cur.val.to_s
-      cur = cur.next
-    end
-    puts str
   end
 
   private
-
-  def insert_tail(node)
-    t = @tail.next
-    @tail.next = node
-    node.prev = @tail
-    t.prev = node
-    node.next = t
-    @size += 1
-  end
-
-  def delete(node)
-    node.prev.next = node.next
-    node.next.prev = node.prev
-    @size -= 1
-  end
 
   class Node
     attr_accessor :key, :val, :next, :prev
     def initialize(key, val=key)
       @key, @val, @next, @prev = key, val, nil, nil
+    end
+  end
+
+  class DDL
+
+    def initialize
+      @last = Node.new(nil, nil)
+      @first = Node.new(nil, nil)
+      @last.prev = @first
+      @first.next = @last
+    end
+
+    def unshift(node)
+      t = @first.next
+      @first.next = node
+      node.prev = @first
+      t.prev = node
+      node.next = t
+    end
+
+    def delete(node)
+      node.prev.next = node.next
+      node.next.prev = node.prev
+    end
+
+    def pop
+      x = last
+      delete(last)
+      x
+    end
+
+    def first
+      @first.next
+    end
+
+    def last
+      @last.prev
     end
   end
 end
@@ -129,5 +138,24 @@ class LRUCache
       @cache.shift              # Magic...
     end
     @cache[key] = value
+  end
+end
+
+
+# Test
+require 'test/unit'
+
+class SimpleTest < Test::Unit::TestCase
+  def test_lru
+    cache = LRUCache.new(2)
+    cache.put(1, 1)
+    cache.put(2, 2)
+    assert_equal cache.get(1), 1
+    cache.put(3, 3)
+    assert_equal cache.get(2), -1
+    cache.put(4, 4)
+    assert_equal cache.get(1), -1
+    assert_equal cache.get(3), 3
+    assert_equal cache.get(4), 4
   end
 end

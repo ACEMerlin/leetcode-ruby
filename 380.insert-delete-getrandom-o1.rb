@@ -44,31 +44,32 @@
 
 # 1. hash: { val:index }
 # 2. nums: [val]
-# 3. Always delete the last element from nums, swap with last element if needed.
+# 3. Insert at the tail of nums.
+# 3. Delete the last item from nums, swap with last element if necessary.
 
 class RandomizedSet
 
   def initialize()
-    @st = {}
+    @h = {}
     @nums = []
   end
 
   def insert(val)
-    return false if @st.has_key?(val)
-    @st[val] = @nums.size
-    @nums << val
+    return false if @h.has_key?(val)  # already exists
+    @h[val] = @nums.size              # new item has index of @num.size
+    @nums << val                      # push item
     true
   end
 
   def remove(val)
-    return false if !@st.has_key?(val)
-    p = @st[val]
-    if p < @nums.size-1
-      last = @nums[-1]
-      @nums[p] = last
-      @st[last] = p
+    return false if !@h.has_key?(val) # doesn't have the item
+    p = @h[val]                       # get item's index
+    if p < @nums.size-1               # if it's not the last item
+      last = @nums[-1]                # get the last item
+      @nums[p] = last                 # swap item with last item
+      @h[last] = p                    # update last item's index
     end
-    @st.delete(val)
+    @h.delete(val)                    # delete the item
     @nums.pop
     true
   end

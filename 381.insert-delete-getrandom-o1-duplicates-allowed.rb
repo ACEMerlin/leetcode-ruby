@@ -55,30 +55,30 @@
 class RandomizedCollection
 
   def initialize()
-    @st = {}
+    @h = {}
     @nums = []
   end
 
   def insert(val)
-    if @st.has_key?(val)
-      @nums << [val, @st[val].size]
-      @st[val] << @nums.size-1
+    if @h.has_key?(val)
+      @nums << [val, @h[val].size]
+      @h[val] << @nums.size-1
       false
     else
       @nums << [val, 0]
-      @st[val] = [@nums.size-1]
+      @h[val] = [@nums.size-1]
       true
     end
   end
 
   def remove(val)
-    return false if !@st.has_key?(val)
-    p = @st[val].pop
-    @st.delete(val) if @st[val].empty?
+    return false if !@h.has_key?(val)
+    p = @h[val].pop
+    @h.delete(val) if @h[val].empty?
     if p != @nums.size-1
       last = @nums[-1]
       @nums[p] = last
-      @st[last[0]][last[1]] = p
+      @h[last[0]][last[1]] = p
     end
     @nums.pop
     true

@@ -60,7 +60,7 @@ end
 #      smallest index such that a[j]-a[i]<=dist, then the number of pairs
 #      with j as its right-most endpoint is j-i.
 
-def pairs_within_dist(a ,dist)
+def pairs_within_dist(a, dist)
   ans, i = 0, 0
   (1...a.size).each do |j|
     i += 1 while a[j] - a[i] > dist

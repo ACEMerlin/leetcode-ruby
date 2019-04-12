@@ -39,6 +39,8 @@
 # end
 
 
+# Recursive.
+
 # @param {TreeNode} root
 # @return {Boolean}
 def is_symmetric(root)
@@ -48,5 +50,24 @@ end
 
 def helper(a, b)
   return true if a.nil? && b.nil?
-  a&.val == b&.val && helper(a.left, b.right) && helper(a.right, b.left)
+  return false if a.nil? || b.nil?
+  a.val == b.val && helper(a.left, b.right) && helper(a.right, b.left)
+end
+
+
+# Iterative.
+
+def is_symmetric_a(root)
+  q = [root.right, root.left]
+  while !q.empty?
+    t1 = q.pop
+    t2 = q.pop
+    next if t1.nil? && t2.nil?
+    return false if t1.nil? || t2.nil? || t1.val != t2.val
+    q.unshift t1.left
+    q.unshift t2.right
+    q.unshift t1.right
+    q.unshift t2.left
+  end
+  true
 end

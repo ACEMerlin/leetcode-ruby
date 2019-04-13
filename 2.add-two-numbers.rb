@@ -34,20 +34,15 @@
 # @param {ListNode} l2
 # @return {ListNode}
 def add_two_numbers(l1, l2)
-  t = 0
-  head = result = ListNode.new(nil)
-  while true
-    sum = l1&.val.to_i + l2&.val.to_i  + t
-    t = sum / 10
-    result.val = (t == 1) ? sum % 10 : sum
-    l1 = l1.next unless l1.nil?
-    l2 = l2.next unless l2.nil?
-    if l1.nil? && l2.nil?
-      result = result.next = ListNode.new(1) if t == 1
-      break
-    else
-      result = result.next = ListNode.new(nil)
-    end
+  curr, carry = ListNode.new(nil), 0
+  ans = curr
+  while !l1.nil? || !l2.nil? || !carry.zero?
+    sum = carry + l1&.val.to_i + l2&.val.to_i
+    carry = sum / 10
+    curr.next = ListNode.new(sum % 10)
+    curr = curr.next
+    l1 = l1.next if !l1.nil?
+    l2 = l2.next if !l2.nil?
   end
-  head
+  ans.next
 end

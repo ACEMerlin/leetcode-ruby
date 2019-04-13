@@ -76,16 +76,14 @@ end
 
 # Recursive version
 
-def kth_smallest(root, k)
-  helper(root, [0], k)
-end
-
-def helper(root, count, k)
+def kth_smallest(root, k, count=[0])
   return if root.nil?
-  helper(root.left, count, k) || checker(root, count, k) || helper(root.right, count, k)
+  kth_smallest(root.left, k, count) ||
+    checker(root, k, count) ||
+    kth_smallest(root.right, k, count)
 end
 
-def checker(root, count, k)
+def checker(root, k, count)
   count[0] += 1
   return root.val if count[0] == k
 end

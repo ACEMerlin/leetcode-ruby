@@ -23,15 +23,33 @@
 # end
 
 
+# Recursive.
+
 # @param {ListNode} head
 # @param {Integer} val
 # @return {ListNode}
-def remove_elements(head, val)
+def remove_elements_a(head, val)
   return if head.nil?
   if head.val == val
     head = remove_elements(head.next, val)
   else
     head.next = remove_elements(head.next, val)
+  end
+  head
+end
+
+
+# Iterative.
+
+def remove_elements(head, val)
+  head = head.next while !head.nil? && head.val == val
+  cur = head
+  while !cur.nil? && !cur.next.nil?
+    if cur.next.val == val
+      cur.next = cur.next.next
+    else
+      cur = cur.next
+    end
   end
   head
 end

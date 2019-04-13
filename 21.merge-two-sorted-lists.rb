@@ -24,6 +24,8 @@
 # end
 
 
+# Recursive.
+
 # @param {ListNode} l1
 # @param {ListNode} l2
 # @return {ListNode}
@@ -37,4 +39,21 @@ def merge_two_lists(l1, l2)
     l2.next = merge_two_lists(l1, l2.next)
     l2
   end
+end
+
+
+# Iterative.
+
+def merge_two_lists(l1, l2)
+  ans = cur = ListNode.new(nil)
+  while !l1.nil? && !l2.nil?
+    if l1.val <= l2.val
+      cur.next, l1 = l1, l1.next
+    else
+      cur.next, l2 = l2, l2.next
+    end
+    cur = cur.next
+  end
+  cur.next = l1 || l2
+  ans.next
 end

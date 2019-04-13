@@ -116,3 +116,21 @@ class MinHeap
     @arr[i], @arr[j] = @arr[j], @arr[i]
   end
 end
+
+
+# Bellman-Ford.
+
+def network_delay_time_a(times, n, k)
+  return -1 if times.nil? || times.empty?
+  dp = Array.new(n+1, Float::INFINITY)
+  dp[k] = 0
+  (0..n-1).each do |i|
+    times.each do |(u, v, w)|
+      alt = dp[u] + w
+      dp[v] = alt if alt < dp[v]
+    end
+  end
+  dp.shift
+  ans = dp.max
+  ans == Float::INFINITY ? -1 : ans
+end

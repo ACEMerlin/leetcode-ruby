@@ -127,7 +127,7 @@ end
 #
 # serialize => "3,5,6,N,N,2,7,N,N,4,N,N,1,0,N,N,8,N,N,"
 
-def serialize(root, str = StringIO.new)
+def serialize(root, str='')
   if root.nil?
     str << "N,"
   else
@@ -135,14 +135,14 @@ def serialize(root, str = StringIO.new)
     serialize(root.left, str)
     serialize(root.right, str)
   end
-  str.string
+  str
 end
 
 def deserialize(data)
-  data = data.split(",").map { |v| v == 'N' ? nil : v }
+  data = data.split(",")
   rec = -> {
     first = data.shift
-    return if first.nil?
+    return if first == 'N'
     root = TreeNode.new(first)
     root.left = rec.call
     root.right = rec.call

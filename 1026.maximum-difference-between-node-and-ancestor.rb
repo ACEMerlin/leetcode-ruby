@@ -45,7 +45,7 @@
 
 # @param {TreeNode} root
 # @return {Integer}
-def max_ancestor_diff(root)
+def max_ancestor_diff_a(root)
   [-Float::INFINITY].tap { |r| helper(root, r) }
 end
 
@@ -56,4 +56,16 @@ def helper(root, ans)
   min, max = [min1, min2, max1, max2].minmax
   ans[0] = [ans[0], (root.val-min).abs, (root.val-max).abs].max
   [min, max, root.val].minmax
+end
+
+
+# Top down
+
+def max_ancestor_diff(root, min=Float::INFINITY, max=-Float::INFINITY)
+  return 0 if root.nil?
+  min = [root.val, min].min
+  max = [root.val, max].max
+  ans = [(root.val-min).abs, (root.val-max).abs].max
+  [max_ancestor_diff(root.left, min, max),
+  max_ancestor_diff(root.right, min, max), ans].max
 end

@@ -33,15 +33,12 @@
 
 # @param {TreeNode} root
 # @return {Integer[]}
-def inorder_traversal(root)
-  [].tap { |s| helper(root, s) }
-end
-
-def helper(root, a)
-  return if root.nil?
-  helper(root.left, a)
-  a << root.val
-  helper(root.right, a)
+def inorder_traversal(root, ans=[])
+  return [] if root.nil?
+  inorder_traversal(root.left, ans)
+  ans << root.val
+  inorder_traversal(root.right, ans)
+  ans
 end
 
 
@@ -81,4 +78,22 @@ def inorder_traversal_a(root)
     end
   end
   ret
+end
+
+
+# https://en.wikipedia.org/wiki/Tree_traversal#In-order
+
+def inorder_traversal_b(root)
+  stack, ans = [], []
+  while !stack.empty? || !root.nil?
+    if !root.nil?
+      stack << root
+      root = root.left
+    else
+      root = stack.pop
+      ans << root.val
+      root = root.right
+    end
+  end
+  ans
 end

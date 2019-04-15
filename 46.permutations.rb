@@ -51,3 +51,39 @@ end
 def swap(nums, i, j)
   nums[i], nums[j] = nums[j], nums[i]
 end
+
+
+# DFS+Backtracking.
+
+def permute(nums, seen=Set.new, path=[], paths=[])
+  if path.size == nums.size
+    paths << path.dup
+  else
+    nums.each do |n|
+      next if seen.include?(n)
+      path << n
+      seen << n
+      permute(nums, seen, path, paths)
+      path.pop
+      seen.delete(n)
+    end
+  end
+  paths
+end
+
+
+# DFS.
+
+def permute(nums, seen=Set.new, path=[], paths=[])
+  if path.size == nums.size
+    paths << path.dup
+  else
+    nums.each do |n|
+      next if seen.include?(n)
+      seen << n
+      permute(nums, seen, path+[n], paths)
+      seen.delete(n)
+    end
+  end
+  paths
+end

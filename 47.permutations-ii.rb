@@ -48,3 +48,24 @@ end
 def swap(nums, i, j)
   nums[i], nums[j] = nums[j], nums[i]
 end
+
+
+# DFS+Backtracking.
+
+def permute_unique(nums, seen=Set.new, path=[], paths=[])
+  if path.size == nums.size
+    paths << path.dup
+  else
+    same_level = Set.new
+    (0..nums.size-1).each do |i|
+      next if seen.include?(i) || same_level.include?(nums[i])
+      seen << i
+      same_level << nums[i]
+      path << nums[i]
+      permute_unique(nums, seen, path, paths)
+      path.pop
+      seen.delete(i)
+    end
+  end
+  paths
+end

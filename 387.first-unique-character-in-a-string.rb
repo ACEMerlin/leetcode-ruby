@@ -28,3 +28,12 @@ def first_uniq_char(s)
   s.chars.each_with_index.reduce(Hash.new { |h, k| h[k] = [0, 0] }) { |h, (c, i)| h[c][0] += 1; h[c][1] = i; h }.each { |c, (f, i)| return i if f == 1 }
   -1
 end
+
+
+def first_uniq_char(s)
+  h = s.chars.reduce(Hash.new(0)) { |h, c| h[c] += 1; h }
+  s.chars.each_with_index do |c, i|
+    return i if h[c] == 1
+  end
+  -1
+end

@@ -89,6 +89,15 @@ have them build-in, so I implement them when I need to, see
 - =sparse-table.rb= 1d Sparse Table with range minimum/maximum query.
 - =treap.rb= Treap (rotation based and merge/split based).
 
+
+* Memes
+
+[[./imgs/meme0.jpg]]
+
+[[./imgs/meme1.jpg]]
+
+[[./imgs/meme2.jpg]]
+
 * Other Useful Stuff
 
 ** Algorithm

@@ -1,3 +1,19 @@
+* Table of Contents :TOC_2_gh:
+- [[#leetcode-ruby][leetcode-ruby]]
+  - [[#what-are-those][What are those]]
+  - [[#what-you-get][What you get]]
+- [[#ruby][Ruby]]
+  - [[#stack][Stack]]
+  - [[#queue][Queue]]
+  - [[#map][Map]]
+  - [[#set][Set]]
+  - [[#other-data-structures][Other Data Structures]]
+- [[#memes][Memes]]
+- [[#other-useful-stuff][Other Useful Stuff]]
+  - [[#algorithm][Algorithm]]
+  - [[#system-design][System design]]
+  - [[#other][Other]]
+
 * leetcode-ruby
 
 ** What are those
@@ -9,7 +25,7 @@ These are my leetcode solutions along with some other stuff:
   - *data-structures* contains the general data structures I use to
     solve problems. They are used throughout my solutions.
 
-** What you get:
+** What you get
 
   - Solutions have problem description with it so that you don't need
     to visit leetcode. You can also use this repo with [[https://github.com/skygragon/leetcode-cli][leetcode-cli]].

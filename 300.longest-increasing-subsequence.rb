@@ -160,3 +160,75 @@ def list_of_lis(nums)
   end
   ans
 end
+
+
+# Segment Tree. O(n*log(n)).
+
+def length_of_lis(nums)
+  n = nums.size
+  t = SegTree.new(Array.new(n, 0))
+  a = nums.zip(n.times).sort_by { |(a, b)| [a, -b] }
+  a.each do |(_, j)|
+    if j == 0
+      t.update(0, 1)
+    else
+      t.update(j, t.query(0, j-1)+1)
+    end
+  end
+  t.query(0, n-1)
+end
+
+class SegTree
+
+  def combine(l, r)
+    [l, r].max
+  end
+
+  def update(p, v, i=1, lo=0, hi=@size-1)
+    if lo == hi
+      @tree[i] = v
+    else
+      m = lo+(hi-lo)/2
+      if p <= m
+        update(p, v, i*2, lo, m)
+      else
+        update(p, v, i*2+1, m+1, hi)
+      end
+      @tree[i] = combine(@tree[i*2], @tree[i*2+1])
+    end
+  end
+
+  def query(p, q, i=1, lo=0, hi=@size-1)
+    return @tree[i] if lo == p && hi == q
+    m = lo+(hi-lo)/2
+    return query(p, q, i*2, lo, m) if q <= m
+    return query(p, q, i*2+1, m+1, hi) if p > m
+    l = query(p, m, i*2, lo, m)
+    r = query(m+1, q, i*2+1, m+1, hi)
+    combine(l, r)
+  end
+
+  def build(a, i, lo, hi)
+    return if lo > hi
+    if lo == hi
+      @tree[i] = a[lo]
+    else
+      m = lo+(hi-lo)/2
+      build(a, i*2, lo, m)
+      build(a, i*2+1, m+1, hi)
+      @tree[i] = combine(@tree[i*2], @tree[i*2+1])
+    end
+  end
+
+  def initialize(a)
+    @size = a.size
+    @tree = Array.new(tree_size(@size))
+    build(a, 1, 0, @size-1)
+  end
+
+  def tree_size(n)
+    s = 1
+    s <<= 1 while s < n
+    s << 1
+  end
+end
